@@ -1,0 +1,65 @@
+appId: com.lookatwhataiCando.codexsearch
+productName: CodexSearch
+copyright: Copyright © 2025 LookAtWhatAiCanDo
+
+directories:
+  buildResources: assets
+  output: dist-electron
+
+# Bundle everything from the monorepo that the main process needs
+files:
+  - dist/**
+  - "!dist/**/*.map"
+
+# Include workspace packages as bundled resources
+extraResources:
+  - from: ../web/dist
+    to: web/dist
+    filter: ["**/*"]
+
+# The main entry after packaging
+extraMetadata:
+  main: dist/main.js
+
+# How electron-builder finds Node modules
+nodeGypRebuild: false
+npmRebuild: true
+
+mac:
+  target:
+    - target: dmg
+      arch: [x64, arm64]
+    - target: zip
+      arch: [x64, arm64]
+  category: public.app-category.developer-tools
+  icon: assets/icon.icns
+  # Notarization (fill in GitHub Actions secrets)
+  # notarize:
+  #   teamId: YOUR_TEAM_ID
+
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+  icon: assets/icon.ico
+
+linux:
+  target:
+    - target: AppImage
+      arch: [x64]
+    - target: deb
+      arch: [x64]
+  icon: assets/icon.png
+  category: Utility
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+
+publish:
+  provider: github
+  owner: LookAtWhatAiCanDo
+  repo: CodexSearch
+  releaseType: release

@@ -54,7 +54,19 @@ Each file is a stream of events. CodexSearch reads them all at startup (~0.5s fo
 
 Thread names come from `~/.codex/session_index.jsonl` when available, or are derived from the first user message in the session.
 
-## Installation
+## Download
+
+Pre-built installers are on the [Releases page](https://github.com/LookAtWhatAiCanDo/CodexSearch/releases):
+
+| Platform | File |
+|---|---|
+| macOS (Apple Silicon + Intel) | `CodexSearch-x.x.x.dmg` |
+| Windows | `CodexSearch-Setup-x.x.x.exe` |
+| Linux | `CodexSearch-x.x.x.AppImage` or `.deb` |
+
+The app checks for updates automatically on launch and prompts you (with release notes) when a new version is available.
+
+## Install via npm
 
 ```bash
 # Run directly without installing

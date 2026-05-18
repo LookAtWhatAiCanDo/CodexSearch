@@ -1,0 +1,26 @@
+{
+  "name": "@codex-search/desktop",
+  "version": "1.0.0",
+  "private": true,
+  "main": "dist/main.js",
+  "scripts": {
+    "dev": "tsc && electron .",
+    "build": "tsc",
+    "dist": "electron-builder",
+    "dist:mac": "electron-builder --mac",
+    "dist:win": "electron-builder --win",
+    "dist:linux": "electron-builder --linux"
+  },
+  "dependencies": {
+    "@codex-search/core": "*",
+    "@codex-search/server": "*",
+    "chokidar": "^4",
+    "electron-updater": "^6"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "electron": "^33",
+    "electron-builder": "^25",
+    "typescript": "^5"
+  }
+}

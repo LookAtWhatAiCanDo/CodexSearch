@@ -189,6 +189,158 @@ to help OpenAI prioritize a native fix.
 
 Tone: factual, shows the problem clearly, credits the upstream issue, invites engagement.
 
+## Electron Desktop App (`packages/desktop/`)
+
+### Why Electron
+Zero migration cost — the Node.js Express server runs natively in the Electron main process. `electron-updater` provides battle-tested GitHub Releases auto-update with release notes on all three platforms.
+
+### New workspace: `packages/desktop/`
+
+```
+packages/desktop/
+├── package.json           # electron, electron-builder, electron-updater
+├── electron-builder.yml   # platform targets + publish config
+├── tsconfig.json
+├── assets/
+│   └── icon.png           # 512×512, used for all platforms
+└── src/
+    ├── main.ts            # Electron main process
+    └── preload.ts         # contextBridge (minimal — no node in renderer)
+```
+
+### `src/main.ts` — main process responsibilities
+
+1. **Start the Express server** from `@codex-search/server` on port 3001 (same code as CLI `--web` mode, reused directly)
+2. **Create BrowserWindow** loading `http://localhost:3001` (works in both dev and prod since Express serves the static web build)
+3. **Check for updates** on app ready via `electron-updater` — fetches GitHub Releases, shows dialog with release notes, downloads in background, prompts restart
+4. **Single-instance lock** — `app.requestSingleInstanceLock()` so double-clicking the icon focuses the existing window
+
+### `electron-builder.yml`
+
+```yaml
+appId: com.lookatwhataiCando.codexsearch
+productName: CodexSearch
+directories:
+  output: dist-electron
+files:
+  - packages/desktop/dist/**
+  - packages/server/dist/**
+  - packages/core/dist/**
+  - packages/web/dist/**
+  - node_modules/**
+extraResources:
+  - from: packages/web/dist
+    to: web/dist
+mac:
+  target: [dmg, zip]   # zip required for Mac auto-update
+  category: public.app-category.developer-tools
+win:
+  target: nsis
+linux:
+  target: [AppImage, deb]
+publish:
+  provider: github
+  owner: LookAtWhatAiCanDo
+  repo: CodexSearch
+```
+
+### `package.json` key scripts
+
+```json
+"scripts": {
+  "dev":   "tsx src/main.ts",           // dev: uses tsx, loads vite at :5173
+  "build": "tsc",
+  "dist":  "electron-builder",           // local test build
+  "dist:mac":   "electron-builder --mac",
+  "dist:win":   "electron-builder --win",
+  "dist:linux": "electron-builder --linux"
+}
+```
+
+Add to **root** `package.json`:
+```json
+"build:desktop": "npm run build:publish && npm run dist -w @codex-search/desktop"
+```
+
+### Auto-update flow (`electron-updater`)
+
+```typescript
+import { autoUpdater } from 'electron-updater';
+
+autoUpdater.autoDownload = false;  // ask user first
+
+autoUpdater.on('update-available', (info) => {
+  // Show dialog: version, release date, release notes (from GitHub Release body)
+  // User clicks "Download & Install" → autoUpdater.downloadUpdate()
+  // User clicks "Later" → dismiss
+});
+
+autoUpdater.on('update-downloaded', () => {
+  // Show dialog: "Ready to install. Restart now?"
+  // User clicks "Restart" → autoUpdater.quitAndInstall()
+});
+
+app.whenReady().then(() => {
+  createWindow();
+  autoUpdater.checkForUpdates();   // non-blocking
+});
+```
+
+**Release notes**: `electron-updater` reads the GitHub Release body automatically and passes it as `info.releaseNotes` — display it in the update dialog.
+
+### GitHub Actions: `.github/workflows/release.yml`
+
+Trigger: `push` to tags matching `v*.*.*`
+
+Matrix build — three parallel jobs:
+| Runner | Output |
+|---|---|
+| `macos-latest` | `.dmg` + `.zip` |
+| `windows-latest` | `.exe` (NSIS installer) |
+| `ubuntu-latest` | `.AppImage` + `.deb` |
+
+Each job:
+1. `npm ci`
+2. `npm run build:publish` (core → web → desktop)
+3. `electron-builder --publish always` (builds + uploads to the GitHub Release)
+
+The `GH_TOKEN` secret is passed to electron-builder so it can attach artifacts to the release.
+
+### Code signing (required for seamless auto-update)
+
+- **macOS**: Apple Developer ID cert + notarization. Set `CSC_LINK`, `CSC_KEY_PASSWORD`, `APPLE_ID`, `APPLE_APP_SPECIFIC_PASSWORD` in GitHub Actions secrets. electron-builder handles notarization via `afterSign` hook.
+- **Windows**: Code signing cert (EV cert removes SmartScreen warning). Set `CSC_LINK`, `CSC_KEY_PASSWORD`.
+- **Linux**: No signing required.
+
+Without signing, auto-update still works on Linux and for dev/testing, but macOS Gatekeeper will block unsigned updates.
+
+### Dev workflow changes
+
+```bash
+# Dev (existing — unchanged)
+npm run dev
+
+# Build + package locally (Mac only)
+npm run build:publish
+npm run dist -w @codex-search/desktop
+
+# Release a new version
+git tag v1.0.0 && git push --tags
+# → GitHub Actions builds all three platforms and uploads to the release
+```
+
+### Files to create/modify
+
+- **New**: `packages/desktop/package.json`
+- **New**: `packages/desktop/tsconfig.json`
+- **New**: `packages/desktop/electron-builder.yml`
+- **New**: `packages/desktop/src/main.ts`
+- **New**: `packages/desktop/src/preload.ts`
+- **New**: `packages/desktop/assets/icon.png` (placeholder — user to replace)
+- **New**: `.github/workflows/release.yml`
+- **Modify**: root `package.json` — add `packages/desktop` to workspaces, add `build:desktop` script
+- **Modify**: `README.md` — add "Download" section with links to GitHub Releases
+
 ## Verification
 
 ```bash

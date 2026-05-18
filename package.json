@@ -6,8 +6,10 @@
     "dev": "concurrently -n server,web -c blue,green \"npm run dev -w @codex-search/server\" \"npm run dev -w @codex-search/web\"",
     "build": "npm run build -w @codex-search/core && npm run build -w @codex-search/server && npm run build -w @codex-search/web",
     "build:publish": "npm run build -w @codex-search/core && npm run build -w @codex-search/web && mkdir -p packages/cli/public && cp -r packages/web/dist/* packages/cli/public/ && npm run build -w @codex-search/cli",
+    "build:desktop": "npm run build && npm run build -w @codex-search/desktop",
     "start": "npm run start -w @codex-search/server",
-    "cli": "tsx packages/cli/src/cli.ts"
+    "cli": "tsx packages/cli/src/cli.ts",
+    "desktop": "npm run build:desktop && npm run dist -w @codex-search/desktop"
   },
   "devDependencies": {
     "concurrently": "^9",
