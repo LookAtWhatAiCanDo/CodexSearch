@@ -9,7 +9,8 @@
     "dist": "electron-builder",
     "dist:mac": "electron-builder --mac",
     "dist:win": "electron-builder --win",
-    "dist:linux": "electron-builder --linux"
+    "dist:linux": "electron-builder --linux",
+    "icons": "node scripts/generate-icons.js"
   },
   "dependencies": {
     "@codex-search/core": "*",
@@ -21,6 +22,8 @@
     "@types/node": "^22",
     "electron": "^33",
     "electron-builder": "^25",
+    "png-to-ico": "^3.0.1",
+    "sharp": "^0.34.5",
     "typescript": "^5"
   }
 }

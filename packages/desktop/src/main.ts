@@ -9,6 +9,8 @@ import type { SearchIndex } from '@codex-search/core';
 import { createApp } from '@codex-search/server';
 import type { UpdateInfo } from 'electron-updater';
 
+app.setName('CodexSearch');
+
 const PORT = 3001;
 const isDev = !app.isPackaged;
 
