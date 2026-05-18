@@ -1,0 +1,32 @@
+{
+  "name": "codex-search",
+  "version": "1.0.0",
+  "description": "Search all your OpenAI Codex desktop app chat sessions, including archived ones",
+  "bin": {
+    "codex-search": "./dist/cli.js"
+  },
+  "files": ["dist/", "public/"],
+  "keywords": ["openai", "codex", "search", "chat", "sessions", "archived"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LookAtWhatAiCanDo/CodexSearch"
+  },
+  "scripts": {
+    "dev": "tsx src/cli.ts",
+    "build": "esbuild src/cli.ts --bundle --platform=node --target=node18 --outfile=dist/cli.js --banner:js='#!/usr/bin/env node' && chmod +x dist/cli.js"
+  },
+  "dependencies": {
+    "@codex-search/core": "*",
+    "@codex-search/server": "*",
+    "chalk": "^5",
+    "commander": "^12",
+    "open": "^10"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "esbuild": "^0.25",
+    "tsx": "^4",
+    "typescript": "^5"
+  }
+}

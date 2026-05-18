@@ -1,0 +1,17 @@
+{
+  "name": "codexsearch-monorepo",
+  "private": true,
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "dev": "concurrently -n server,web -c blue,green \"npm run dev -w @codex-search/server\" \"npm run dev -w @codex-search/web\"",
+    "build": "npm run build -w @codex-search/core && npm run build -w @codex-search/server && npm run build -w @codex-search/web",
+    "build:publish": "npm run build -w @codex-search/core && npm run build -w @codex-search/web && mkdir -p packages/cli/public && cp -r packages/web/dist/* packages/cli/public/ && npm run build -w @codex-search/cli",
+    "start": "npm run start -w @codex-search/server",
+    "cli": "tsx packages/cli/src/cli.ts"
+  },
+  "devDependencies": {
+    "concurrently": "^9",
+    "typescript": "^5",
+    "@types/node": "^22"
+  }
+}
