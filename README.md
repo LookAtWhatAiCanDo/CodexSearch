@@ -103,10 +103,45 @@ Options:
 git clone https://github.com/LookAtWhatAiCanDo/CodexSearch
 cd CodexSearch
 npm install
-npm run dev   # starts Express on :3001 and Vite on :5173
+npm run dev        # Express on :3001 + Vite on :5173 (hot-reload)
 ```
 
 Open `http://localhost:5173` for the hot-reloading dev UI.
+
+### Building installers locally
+
+All commands run from the repo root:
+
+```bash
+# Build + package for the current platform
+npm run desktop
+
+# Or target a specific platform explicitly:
+npm run desktop:mac    # → .dmg + .zip (macOS only; must run on a Mac)
+npm run desktop:win    # → .exe NSIS installer
+npm run desktop:linux  # → .AppImage + .deb
+```
+
+Output lands in **`packages/desktop/dist-electron/`**, for example:
+
+```
+packages/desktop/dist-electron/CodexSearch-1.0.0-arm64.dmg   ← Apple Silicon
+packages/desktop/dist-electron/CodexSearch-1.0.0.dmg         ← Intel
+```
+
+Open it: `open packages/desktop/dist-electron/CodexSearch-1.0.0-arm64.dmg`
+
+The `desktop` script handles everything in order: TypeScript compilation of all packages → Vite production build of the web UI → electron-builder packaging.
+
+### Regenerating icons
+
+If you change `packages/desktop/assets/icon.svg`, regenerate all platform formats:
+
+```bash
+npm run icons   # → icon.png (1024×1024), icon.icns (macOS), icon.ico (Windows)
+```
+
+Requires `iconutil` (built into macOS). The generated files are committed to the repo so CI doesn't need to regenerate them.
 
 ## Data Privacy
 

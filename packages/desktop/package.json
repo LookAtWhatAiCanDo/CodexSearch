@@ -2,6 +2,8 @@
   "name": "@codex-search/desktop",
   "version": "1.0.0",
   "private": true,
+  "description": "Search all your OpenAI Codex desktop app chat sessions, including archived ones",
+  "author": "LookAtWhatAiCanDo",
   "main": "dist/main.js",
   "scripts": {
     "dev": "tsc && electron .",
@@ -20,7 +22,7 @@
   },
   "devDependencies": {
     "@types/node": "^22",
-    "electron": "^33",
+    "electron": "33.4.11",
     "electron-builder": "^25",
     "png-to-ico": "^3.0.1",
     "sharp": "^0.34.5",
