@@ -7,7 +7,10 @@ on:
 
 jobs:
   release:
+    permissions:
+      contents: write   # required to create GitHub Releases and upload assets
     strategy:
+      fail-fast: false   # let all three platforms run to completion independently
       matrix:
         include:
           - os: macos-latest
@@ -46,7 +49,11 @@ jobs:
 
       - name: Package (Mac)
         if: matrix.platform == 'mac'
-        run: npm run dist:mac -w @codex-search/desktop
+        # Unset CSC_LINK at shell level if empty — electron-builder resolves ""
+        # to the CWD (packages/desktop) and errors "not a file" when no cert is set.
+        run: |
+          [ -z "$CSC_LINK" ] && unset CSC_LINK || true
+          npm run dist:mac -w @codex-search/desktop
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CSC_LINK: ${{ secrets.MAC_CERT_P12 }}
@@ -57,7 +64,11 @@ jobs:
 
       - name: Package (Windows)
         if: matrix.platform == 'win'
-        run: npm run dist:win -w @codex-search/desktop
+        # Same empty-string issue as Mac — unset CSC_LINK in PowerShell if empty.
+        shell: pwsh
+        run: |
+          if ([string]::IsNullOrEmpty($env:CSC_LINK)) { Remove-Item Env:CSC_LINK -ErrorAction SilentlyContinue }
+          npm run dist:win -w @codex-search/desktop
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CSC_LINK: ${{ secrets.WIN_CERT_P12 }}

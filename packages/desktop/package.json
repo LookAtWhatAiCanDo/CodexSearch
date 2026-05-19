@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "description": "Search all your OpenAI Codex desktop app chat sessions, including archived ones",
-  "author": "LookAtWhatAiCanDo",
+  "homepage": "https://github.com/LookAtWhatAiCanDo/CodexSearch",
+  "author": {
+    "name": "LookAtWhatAiCanDo",
+    "email": "pv@swooby.com"
+  },
   "main": "dist/main.js",
   "scripts": {
     "dev": "tsc && electron .",

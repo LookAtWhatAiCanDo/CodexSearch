@@ -51,6 +51,10 @@ linux:
       arch: [x64]
   icon: assets/icon.png
   category: Utility
+  # Scoped npm name (@codex-search/desktop) becomes the deb filename by default,
+  # creating a path like dist-electron/@codex-search/desktop_1.0.0_amd64.deb
+  # whose parent directory doesn't exist. Override to a clean flat filename.
+  artifactName: ${productName}-${version}-${arch}.${ext}
 
 nsis:
   oneClick: false
