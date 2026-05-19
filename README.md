@@ -124,3 +124,26 @@ The more signal they see, the sooner archived chat search lands in Codex itself.
 ## Meta
 
 This utility was initially written using [Anthropic Claude Code](https://claude.ai/code) — an AI coding assistant from Anthropic, OpenAI's main competitor. The irony is noted and appreciated. Just another brick in the [LookAtWhatAiCanDo](https://github.com/LookAtWhatAiCanDo) wall.
+
+---
+
+## Footnote: The Bigger Idea
+
+Once you have search working for Codex sessions, the obvious next question is: why stop there? Every AI coding assistant stores session data locally in some format. Jumping between Codex, Claude Code, Cursor, Aider, Copilot, and Gemini to find a conversation you had three weeks ago is the same frustrating problem, just multiplied.
+
+The logical evolution is a gestalt aggregator — a single app that indexes and searches sessions across *all* local AI coding assistants. Call it **Codeoba**, or something else. The architecture is the same: find the local storage, parse the format, feed a common index. The value compounds with every tool you add.
+
+This space just started heating up. All of the following launched in the last year, suggesting the problem is real and the timing is now:
+
+| Project | Focus | First commit |
+|---|---|---|
+| [ccmanager](https://github.com/kbwo/ccmanager) | Multi-tool session manager (Claude Code, Cursor, Copilot CLI, Gemini, Codex, Cline…) | [Jun 5, 2025](https://github.com/kbwo/ccmanager/commit/1b3f94bbbea32e68e084dd4a697a0642d961c6b3) |
+| [agent-sessions](https://github.com/jazzyalex/agent-sessions) | macOS GUI: browse + search sessions across 7+ tools | [Sep 10, 2025](https://github.com/jazzyalex/agent-sessions/commit/122f9b9a5a2395ff21189f1e5fe874e61955d6ac) |
+| [CASS](https://github.com/Dicklesworthstone/coding_agent_session_search) | CLI/TUI: lexical + semantic search across 11+ providers | [Nov 20, 2025](https://github.com/Dicklesworthstone/coding_agent_session_search/commit/2cf22a19271f80bacc02abc34d34eb52e52df6f9) |
+| [lore](https://github.com/varalys/lore) | Sessions linked to git commits, full-text search, MCP server | [Dec 22, 2025](https://github.com/varalys/lore/commit/579e36f4a389a257d20d4286c78dea815f9a62d4) |
+| [session-graph](https://github.com/robertoshimizu/session-graph) | Sessions as a W3C knowledge graph (SPARQL queryable) | [Feb 14, 2026](https://github.com/robertoshimizu/session-graph/commit/763675a708f2ba6b4ce60521b8049154602046ad) |
+| [Claudoscope](https://github.com/cordwainersmith/Claudoscope) | macOS menu-bar app, Claude Code-specific | [Mar 14, 2026](https://github.com/cordwainersmith/Claudoscope/commit/0a00a8f9cf30e8314266990a537bb0345476dbdf) |
+
+None of these has become the definitive cross-platform, cross-tool, polished solution. The space is active but not yet won. CodexSearch is a starting point — and a proof of concept that the data is right there, readable, and indexable without any API keys or cloud dependencies.
+
+Pro tier ideas that would make this genuinely powerful: natural language queries via an embedded LLM, semantic similarity search, automatic tagging by project/repo, and cross-session "what was I working on last week?" summaries.
