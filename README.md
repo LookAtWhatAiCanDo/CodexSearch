@@ -58,11 +58,19 @@ Thread names come from `~/.codex/session_index.jsonl` when available, or are der
 
 Pre-built installers are on the [Releases page](https://github.com/LookAtWhatAiCanDo/CodexSearch/releases):
 
-| Platform | File |
-|---|---|
-| macOS (Apple Silicon + Intel) | `CodexSearch-x.x.x.dmg` |
-| Windows | `CodexSearch-Setup-x.x.x.exe` |
-| Linux | `CodexSearch-x.x.x.AppImage` or `.deb` |
+**macOS (Apple Silicon):** `CodexSearch-x.x.x-arm64.dmg`
+1. Open the DMG and drag CodexSearch to Applications
+2. Run this once in Terminal — the app is unsigned and macOS will otherwise block it:
+   ```bash
+   xattr -cr /Applications/CodexSearch.app
+   ```
+3. Double-click CodexSearch in Applications to launch
+
+**macOS (Intel):** same steps, use `CodexSearch-x.x.x.dmg`
+
+**Windows:** run `CodexSearch-Setup-x.x.x.exe`
+
+**Linux:** run `CodexSearch-x.x.x-x86_64.AppImage` (chmod +x first) or install the `-amd64.deb`
 
 The app checks for updates automatically on launch and prompts you (with release notes) when a new version is available.
 
